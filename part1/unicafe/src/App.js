@@ -3,7 +3,10 @@ import './App.css';
 
 import { useState } from 'react'
 
-const Display = (props) => {
+const StatisticLine = (props) => <p>{props.text} {props.value} {props.text2}</p>
+
+
+const Statistics = (props) => {
 if (props.all === 0) {
   console.log("All is zero...")
   return (
@@ -14,22 +17,41 @@ if (props.all === 0) {
     </div>
   )
 }
-  return (
-    <div>
-      <p>
+
+/** 1.11 create a different StatisticLine function for displaying single statistic
+ * This will ruin the "positive" statistics line 
+ *    since we need to forcefully somehow add a "%" sign after
+ *    notice the ugly fix made when calling the Statistics component for positive...
+ * This however will fix our "newline" problem, and allow to skip the <br /> sign
+ * For some reason this still gives us an annoying line break in between
+ *  which is not present int the assignment picture
+ * 
+*/
+
+/* Old code to display stuff
+    <p>
       good {props.good} <br />
       neutral {props.neutral} <br />
       bad {props.bad} <br />
       all {props.all} <br />
       average {props.ave} <br />
       positive {props.pos} %
-      </p>
+    </p>
+*/
+  return (
+    <div>
+      <StatisticLine text="good" value={props.good} />
+      <StatisticLine text="neutral" value={props.neutral} />
+      <StatisticLine text="bad" value={props.bad} />
+      <StatisticLine text="all" value={props.all} />
+      <StatisticLine text="average" value={props.ave} />
+      <StatisticLine text="positive" value={props.pos} text2="%"/> 
   </div>
   )
 }
   
- 
-  
+// Button was already extracted before 1.10
+// Uncertain how it should be otherwise extracted, since no example is given.
 const Button = ({ handleClick, text }) => <button onClick={handleClick}>{text}</button>
 
 const App = () => {
@@ -93,7 +115,7 @@ const App = () => {
       <Button handleClick={handleClickBad} text="bad" />
 
       <h1>statistics</h1>
-      <Display good={good} neutral={neutral} bad={bad} all={all} ave={ave} pos={pos}/>
+      <Statistics good={good} neutral={neutral} bad={bad} all={all} ave={ave} pos={pos}/>
     </div>
   )
 } 
