@@ -15,24 +15,52 @@ const App = () => {
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
-
+  const [all, setAll] = useState(0)
+  const [ave, setAve] = useState(0)
+  const [score, setScore] = useState(0)
+  const [pos, setPos] = useState(0)
 
   const handleClickGood = () => {
     console.log("Clicked the good button")
     const updatedGood = good + 1
+    const updatedScore = updatedGood - bad
+    const updatedAll = all + 1
+    const updatedAve = updatedScore / updatedAll
+
     setGood(updatedGood)
+    setAll(updatedAll)
+    setScore(updatedScore)
+    setAve(updatedAve)
+    setPos(100 * updatedGood / updatedAll) //good has been updated
+
+    /*
+    console.log("score: ", score, "updatedScore: ", updatedScore)
+    console.log("all: ", all, "updatedAll: ", updatedAll)
+    console.log("ave: ", ave, "updatedAve: ", updatedAve)*/
   }
 
   const handleClickNeutral = () => {
     console.log("Clicked the neutral button")
     const updatedNeutral = neutral + 1
+    const updatedAll = all + 1
+
     setNeutral(updatedNeutral)
+    setAll(updatedAll)
+    setAve(score / updatedAll) // no need to update score
+    setPos(100 * good / updatedAll)
   }  
 
   const handleClickBad = () => {
     console.log("Clicked the bad button")
     const updatedBad = bad + 1
+    const updatedScore = good - updatedBad
+    const updatedAll = all + 1
+
     setBad(updatedBad)
+    setAll(updatedAll)
+    setScore(updatedScore)
+    setAve(updatedScore / updatedAll)
+    setPos(100 * good / updatedAll)
   }  
 
   return (
@@ -46,7 +74,10 @@ const App = () => {
       <h1>statistics</h1>
       <Display text="good" number={good}/> 
       <Display text="neutral" number={neutral}/> 
-      <Display text="bad" number={bad}/>       
+      <Display text="bad" number={bad}/>     
+      <Display text="all" number={all} />
+      <Display text="average" number={ave} />  
+      <p>positive {pos} %</p>
     </div>
   )
 } 
