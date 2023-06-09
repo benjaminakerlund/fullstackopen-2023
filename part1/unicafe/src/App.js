@@ -3,16 +3,31 @@ import './App.css';
 
 import { useState } from 'react'
 
-const Display = (props) => 
-  <div>
+const Display = (props) => {
+if (props.all === 0) {
+  console.log("All is zero...")
+  return (
+    <div>
+      <p>
+        No feedback given
+      </p>
+    </div>
+  )
+}
+  return (
+    <div>
       <p>
       good {props.good} <br />
       neutral {props.neutral} <br />
       bad {props.bad} <br />
+      all {props.all} <br />
       average {props.ave} <br />
       positive {props.pos} %
       </p>
   </div>
+  )
+}
+  
  
   
 const Button = ({ handleClick, text }) => <button onClick={handleClick}>{text}</button>
@@ -78,7 +93,7 @@ const App = () => {
       <Button handleClick={handleClickBad} text="bad" />
 
       <h1>statistics</h1>
-      <Display good={good} neutral={neutral} bad={bad} ave={ave} pos={pos}/>
+      <Display good={good} neutral={neutral} bad={bad} all={all} ave={ave} pos={pos}/>
     </div>
   )
 } 
