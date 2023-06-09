@@ -4,9 +4,15 @@ import './App.css';
 import { useState } from 'react'
 
 const Display = (props) => 
-    <div>
-      <p>{props.text} {props.number}</p>
-    </div>
+  <div>
+      <p>
+      good {props.good} <br />
+      neutral {props.neutral} <br />
+      bad {props.bad} <br />
+      average {props.ave} <br />
+      positive {props.pos} %
+      </p>
+  </div>
  
   
 const Button = ({ handleClick, text }) => <button onClick={handleClick}>{text}</button>
@@ -72,12 +78,7 @@ const App = () => {
       <Button handleClick={handleClickBad} text="bad" />
 
       <h1>statistics</h1>
-      <Display text="good" number={good}/> 
-      <Display text="neutral" number={neutral}/> 
-      <Display text="bad" number={bad}/>     
-      <Display text="all" number={all} />
-      <Display text="average" number={ave} />  
-      <p>positive {pos} %</p>
+      <Display good={good} neutral={neutral} bad={bad} ave={ave} pos={pos}/>
     </div>
   )
 } 
