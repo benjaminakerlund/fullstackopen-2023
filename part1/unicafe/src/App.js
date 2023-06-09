@@ -3,10 +3,15 @@ import './App.css';
 
 import { useState } from 'react'
 
+
+// Button was already extracted before 1.10
+// Uncertain how it should be otherwise extracted, since no example is given.
+const Button = ({ handleClick, text }) => <button onClick={handleClick}>{text}</button>
+
 const StatisticLine = (props) => <p>{props.text} {props.value} {props.text2}</p>
 
-
 const Statistics = (props) => {
+// 1.10 add if statement 
 if (props.all === 0) {
   console.log("All is zero...")
   return (
@@ -24,11 +29,9 @@ if (props.all === 0) {
  *    notice the ugly fix made when calling the Statistics component for positive...
  * This however will fix our "newline" problem, and allow to skip the <br /> sign
  * For some reason this still gives us an annoying line break in between
- *  which is not present int the assignment picture
- * 
-*/
-
-/* Old code to display stuff
+ *    which is not present int the assignment picture
+ 
+ * Old code to display stuff
     <p>
       good {props.good} <br />
       neutral {props.neutral} <br />
@@ -40,6 +43,7 @@ if (props.all === 0) {
 */
   return (
     <div>
+      <h1>statistics</h1>
       <StatisticLine text="good" value={props.good} />
       <StatisticLine text="neutral" value={props.neutral} />
       <StatisticLine text="bad" value={props.bad} />
@@ -50,10 +54,6 @@ if (props.all === 0) {
   )
 }
   
-// Button was already extracted before 1.10
-// Uncertain how it should be otherwise extracted, since no example is given.
-const Button = ({ handleClick, text }) => <button onClick={handleClick}>{text}</button>
-
 const App = () => {
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
@@ -114,7 +114,6 @@ const App = () => {
       <Button handleClick={handleClickNeutral} text="neutral" />
       <Button handleClick={handleClickBad} text="bad" />
 
-      <h1>statistics</h1>
       <Statistics good={good} neutral={neutral} bad={bad} all={all} ave={ave} pos={pos}/>
     </div>
   )
