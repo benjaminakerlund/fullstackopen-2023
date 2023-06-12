@@ -63,6 +63,7 @@ const App = () => {
   const [score, setScore] = useState(0)
   const [pos, setPos] = useState(0)
 
+
   const handleClickGood = () => {
     console.log("Clicked the good button")
     const updatedGood = good + 1
@@ -75,11 +76,6 @@ const App = () => {
     setScore(updatedScore)
     setAve(updatedAve)
     setPos(100 * updatedGood / updatedAll) //good has been updated
-
-    /*
-    console.log("score: ", score, "updatedScore: ", updatedScore)
-    console.log("all: ", all, "updatedAll: ", updatedAll)
-    console.log("ave: ", ave, "updatedAve: ", updatedAve)*/
   }
 
   const handleClickNeutral = () => {
@@ -105,6 +101,9 @@ const App = () => {
     setAve(updatedScore / updatedAll)
     setPos(100 * good / updatedAll)
   }  
+
+  const [selected, setSelected] = useState(0)
+
 
   //This app now returns both ways to display statistics for both 1.10 and 1.11
   return (
