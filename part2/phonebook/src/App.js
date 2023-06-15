@@ -9,6 +9,8 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('add a phonenumber...')
   const [nameList, setNameList] = useState([persons[0].name, persons[1].name])
   const [numberList, setNumberList] = useState([persons[0].number, persons[1].number])
+  const [filterName, setFilterName] = useState()
+  
 
   // Display components
   const Name = (props) => <div>{props.name} {props.number}</div>
@@ -46,10 +48,20 @@ const App = () => {
     setNewNumber(event.target.value)
   }
 
+  const handleFilterName = (event) => {
+    console.log(event.target.value)
+    setFilterName(event.target.value)
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
+      filter shown with <input 
+        value={filterName}
+        onChange={handleFilterName}
+        />
 
+      <h2>add a new</h2>
       <form onSubmit={addNameNumber}>
         <div>name: <input 
           value={newName}
