@@ -34,24 +34,56 @@ const App = () => {
     }
   }
 
+  //{persons.map(element => <Name key={element.name} name={element.name} number={element.number}/> )}
+  // 2.9* Component for displaying persons depending on filter
+  const ShowPersons = (props) => {
+
+    // IF statement to check if filter condition is ''
+    if (filterName === undefined) {
+      console.log("No Filter has been selected")
+      return (
+        <div>
+          {props.persons.map(element => <Name 
+            key={element.name} 
+            name={element.name} 
+            number={element.number} /> )} 
+        </div>
+      )
+    } else if (filterName === '') {
+      console.log("No Filter has been selected")
+      return (
+        <div>
+          {props.persons.map(element => <Name 
+            key={element.name} 
+            name={element.name} 
+            number={element.number} /> )} 
+        </div>
+      )
+    } else {
+      console.log("Something was filtered: ", filterName)
+      if (nameList.includes(filterName)) {
+        console.log(filterName, "found in nameList! At index: ", nameList.indexOf(filterName))
+        const ind = nameList.indexOf(filterName)
+        return (
+          <div><Name 
+            key={props.persons[ind].name} 
+            name={props.persons[ind].name}
+            number={props.persons[ind].number} />
+          </div>)
+      } else {
+        return (<div>no such name foud in phonebook</div>)
+      }
+    }
+
+  }
  
 
   // Event handlers 
+  const handleNameChange = (event) => setNewName(event.target.value)
 
-  const handleNameChange = (event) => {
-    console.log(event.target.value)
-    setNewName(event.target.value)
-  }
+  const handleNumberChange = (event) => setNewNumber(event.target.value)
 
-  const handleNumberChange = (event) => {
-    console.log(event.target.value)
-    setNewNumber(event.target.value)
-  }
-
-  const handleFilterName = (event) => {
-    console.log(event.target.value)
-    setFilterName(event.target.value)
-  }
+  const handleFilterName = (event) => setFilterName(event.target.value)
 
   return (
     <div>
@@ -75,7 +107,7 @@ const App = () => {
       </form>
 
       <h2>Numbers</h2>
-      {persons.map(element => <Name key={element.name} name={element.name} number={element.number}/> )}
+      <ShowPersons persons={persons} />
     </div>
   )
 }
