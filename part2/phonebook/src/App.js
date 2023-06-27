@@ -43,12 +43,18 @@ const App = () => {
         alert(`${newName} is already added to phonebook`)
 
     } else { // continue normal execution 
-        setPersons(persons.concat(personObject))
-        setNameList(nameList.concat(personObject.name))
-        setNumberList(numberList.concat(personObject.number))
-        setNewName('add a name...')      
-        setNewNumber('add a phonenumber...')
-    }
+
+        // 2.12 update info in server also
+        axios
+          .post('http://localhost:3001/persons', personObject)
+          .then(response => {
+            setPersons(persons.concat(personObject))
+            setNameList(nameList.concat(personObject.name))
+            setNumberList(numberList.concat(personObject.number))
+            setNewName('add a name...')      
+            setNewNumber('add a phonenumber...')
+          })
+      }
   }
 
   return (
