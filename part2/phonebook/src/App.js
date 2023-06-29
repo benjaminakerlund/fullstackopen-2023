@@ -1,14 +1,11 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import numberService from './services/numbers'
 import Filter from './components/Filter'
 import ShowAll from './components/ShowAll'
 import ShowPerson from './components/ShowPerson'
 
 const App = () => {
-  /*const [persons, setPersons] = useState([
-    { name: 'Arto Hellas' , number: '041-1234567'},
-    { name: 'Ada Lovelace', number: '044-3456997'}
-  ]) */
+  /* State inits */
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('add a name...')
   const [newNumber, setNewNumber] = useState('add a phonenumber...')
@@ -17,23 +14,24 @@ const App = () => {
   const [filterName, setFilterName] = useState('')
 
   // Fecth stored data from database
-  // 2.11
+  // 2.11 
   useEffect( () => {
     console.log("effect")
-    axios
-      .get('http://localhost:3001/persons')
+    numberService //2.13
+      .getAll()
       .then(response => {
-        console.log("promise fulfilled")
+        console.log("promise fulfulled")
         setPersons(response.data)
       })
   }, [])
   console.log("render", persons.length, "notes")
-  
-
-  // Event handlers 
+    
+  /* Event handlers */
   const handleNameChange = (event) => setNewName(event.target.value)
   const handleNumberChange = (event) => setNewNumber(event.target.value)
   const handleFilterName = (event) => setFilterName(event.target.value)
+
+
 
   const addPerson = (event) => {
     event.preventDefault()
@@ -43,10 +41,9 @@ const App = () => {
         alert(`${newName} is already added to phonebook`)
 
     } else { // continue normal execution 
-
         // 2.12 update info in server also
-        axios
-          .post('http://localhost:3001/persons', personObject)
+        numberService // 2.13
+          .create(personObject)
           .then(response => {
             setPersons(persons.concat(personObject))
             setNameList(nameList.concat(personObject.name))
