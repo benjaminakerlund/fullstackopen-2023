@@ -16,8 +16,15 @@ const remove = personObject => {
     return axios.delete(baseUrl.concat(personObject.id))
 }
 
+// 2.15
+const change = (oldObject, newObject) => {
+    const changeable = baseUrl.concat(oldObject.id)
+    return axios.put(changeable, newObject)
+}
+
 export default {
     getAll,
     create,
-    remove
+    remove,
+    change
 }

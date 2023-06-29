@@ -36,8 +36,20 @@ const App = () => {
     event.preventDefault()
     const personObject = {name: newName, number: newNumber}
     // 2.7 check if the name is already in the phonebook
-    if(persons.find(element => element.name === personObject.name)) { //check if nameObject.name already in namaeList, returns true if so
-        alert(`${newName} is already added to phonebook`)
+    const comparable = persons.find(element => element.name === personObject.name)
+    if(comparable) { //check if name already in persons, returns true if so
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        numberService
+          .change(comparable, personObject) // 2.15
+          .then(
+            numberService
+              .getAll()
+              .then(response => {
+                setPersons(response.data)
+            })
+          )
+      }
+    
     } else { // continue normal execution 
         // 2.12 update info in server also
         numberService // 2.13
@@ -70,7 +82,7 @@ const App = () => {
     }
     else {
       console.log("Nothing was deleted")
-      window.alert("Nothing was deleted!")
+      alert("Nothing was deleted!")
     }
   }
 
