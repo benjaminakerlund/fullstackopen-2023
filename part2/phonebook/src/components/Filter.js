@@ -9,13 +9,13 @@ const Filter = (props) => {
     if (props.filterName === undefined) { // No filter was selected, display content as usual
       return (
         <div>
-          <ShowAll persons={props.persons} />
+          <ShowAll persons={props.persons} toggleDelete={props.toggleDelete}/>
         </div>
       )
     } else if (props.filterName === '') { // No filter was selected, display content as usual
       return (
         <div>
-          <ShowAll persons={props.persons} />
+          <ShowAll persons={props.persons} toggleDelete={props.toggleDelete}/>
         </div>
       )
     } 
@@ -23,7 +23,12 @@ const Filter = (props) => {
       return (
         <div>
           {props.persons.filter(person => person.name.toUpperCase().includes(props.filterName.toUpperCase())).map(person => (
-            <ShowPerson key={person.name} name={person.name} number={person.number} />
+            <ShowPerson 
+              key={person.name} 
+              name={person.name} 
+              number={person.number} 
+              toggleDelete={() => props.toggleDelete(person.name)} //2.14
+              />
           ))}
         </div>
       )

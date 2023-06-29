@@ -9,7 +9,9 @@ const ShowAll = (props) => {
             {props.persons.map(element => <ShowPerson 
             key={element.name} 
             name={element.name} 
-            number={element.number} /> )} 
+            number={element.number} 
+            toggleDelete={() => props.toggleDelete(element)} //2.14
+            /> )} 
         </div>
         )
     }
