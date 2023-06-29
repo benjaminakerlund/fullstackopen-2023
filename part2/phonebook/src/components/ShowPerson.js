@@ -4,10 +4,10 @@ import React from "react"
 const ShowPerson= ( props ) => {
 
 return (
-    <div>
+    <li>
         {props.name} {props.number}
         <button onClick={props.toggleDelete}>Delete</button> 
-    </div>
+    </li>
 )} // 2.14 added button
 
 export default ShowPerson

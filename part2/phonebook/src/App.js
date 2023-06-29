@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import numberService from './services/numbers'
 import Filter from './components/Filter'
-import ShowAll from './components/ShowAll'
-import ShowPerson from './components/ShowPerson'
+import Notification from './components/Notification'
+import './index.css'
 
 //DELETE THIS
 import axios from 'axios'
@@ -14,6 +14,7 @@ const App = () => {
   const [newName, setNewName] = useState('add a name...')
   const [newNumber, setNewNumber] = useState('add a phonenumber...')
   const [filterName, setFilterName] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
 
   // Fecth stored data from database
   // 2.11 
@@ -42,6 +43,12 @@ const App = () => {
         numberService
           .change(comparable, personObject) // 2.15
           .then(
+            setErrorMessage(
+              `Added '${personObject.name}'`
+            ),
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000),
             numberService
               .getAll()
               .then(response => {
@@ -88,7 +95,8 @@ const App = () => {
 
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h1>Phonebook</h1>
+      <Notification message={errorMessage}/>
       filter shown with <input 
         value={filterName}
         onChange={handleFilterName}
