@@ -16,10 +16,8 @@ const App = () => {
   const [filterName, setFilterName] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
 
-  // Fecth stored data from database
-  // 2.11 
+  // Fecth stored data from database 2.11 
   useEffect( () => {
-    //console.log("effect")
     numberService //2.13
       .getAll()
       .then(response => {
@@ -42,26 +40,27 @@ const App = () => {
       if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
         numberService
           .change(comparable, personObject) // 2.15
-          .then(
-            setErrorMessage(
-              `Added '${personObject.name}'`
-            ),
+          .then( () => {
+            setErrorMessage(`Updated number for ${personObject.name}`)
             setTimeout(() => {
               setErrorMessage(null)
-            }, 5000),
+            }, 5000)
             numberService
               .getAll()
               .then(response => {
                 setPersons(response.data)
             })
-          )
+          })
       }
-    
     } else { // continue normal execution 
         // 2.12 update info in server also
         numberService // 2.13
           .create(personObject)
           .then(
+            setErrorMessage(`Added ${personObject.name}`),
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000),
             numberService
               .getAll()
               .then(response => {
@@ -79,6 +78,10 @@ const App = () => {
       numberService
         .remove(obj)
         .then(
+          setErrorMessage(`Deleted ${obj.name}`),
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000),
           numberService
             .getAll()
             .then(response => {
