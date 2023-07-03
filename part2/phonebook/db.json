@@ -16,14 +16,14 @@
       "id": 4
     },
     {
-      "name": "Benjamin Åkerlund",
-      "number": "0000",
-      "id": 5
-    },
-    {
       "name": "Arto Hellas",
       "number": "6969",
       "id": 6
+    },
+    {
+      "name": "Benjamin Åkerlund",
+      "number": "01234",
+      "id": 7
     }
   ]
 }

@@ -15,6 +15,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('add a phonenumber...')
   const [filterName, setFilterName] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
+  const [errorStatus, setErrorStatus] = useState(false)
 
   // Fecth stored data from database 2.11 
   useEffect( () => {
@@ -33,6 +34,7 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
+    setErrorStatus(false)
     const personObject = {name: newName, number: newNumber}
     // 2.7 check if the name is already in the phonebook
     const comparable = persons.find(element => element.name === personObject.name)
@@ -41,10 +43,18 @@ const App = () => {
         numberService
           .change(comparable, personObject) // 2.15
           .then( () => {
-            setErrorMessage(`Updated number for ${personObject.name}`)
+            setErrorMessage(`Updated number for ${personObject.name}`) //2.16
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)})
+          .catch(error => {
+            setErrorStatus(true)
+            setErrorMessage(`Information of ${personObject.name} has already been removed from server`) //2.18*
             setTimeout(() => {
               setErrorMessage(null)
             }, 5000)
+          })
+          .then( () => {
             numberService
               .getAll()
               .then(response => {
@@ -57,7 +67,7 @@ const App = () => {
         numberService // 2.13
           .create(personObject)
           .then(
-            setErrorMessage(`Added ${personObject.name}`),
+            setErrorMessage(`Added ${personObject.name}`), //2.16
             setTimeout(() => {
               setErrorMessage(null)
             }, 5000),
@@ -70,6 +80,7 @@ const App = () => {
               })
           )
       }
+    setErrorStatus(false)
   }
 
   // 2.14
@@ -78,28 +89,38 @@ const App = () => {
       numberService
         .remove(obj)
         .then(
-          setErrorMessage(`Deleted ${obj.name}`),
+          setErrorMessage(`Deleted ${obj.name}`), //2.16
           setTimeout(() => {
             setErrorMessage(null)
-          }, 5000),
+          }, 5000))
+        .catch(error => {
+          setErrorStatus(true)
+          setErrorMessage(`Information of ${obj.name} has already been removed from server`) //2.18*
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
+        })
+        .then(
           numberService
             .getAll()
             .then(response => {
               setPersons(response.data)
             })
         )
-      console.log("Delete succesful")
     }
     else {
-      console.log("Nothing was deleted")
-      alert("Nothing was deleted!")
+      setErrorMessage("Nothing was deleted!") //2.17*
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
     }
+    setErrorStatus(false)
   }
 
   return (
     <div>
       <h1>Phonebook</h1>
-      <Notification message={errorMessage}/>
+      <Notification message={errorMessage} error={errorStatus}/> 
       filter shown with <input 
         value={filterName}
         onChange={handleFilterName}
