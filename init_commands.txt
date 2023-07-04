@@ -10,3 +10,7 @@ rm -rf .git
 ## Add the following command: "server": "json-server -p3001 --watch db.json"
 ## After this the server is viewable in localhost:3001 
 npm run server
+
+
+##part 3 wisdom, serverside stuff, run inside project dir
+npm install express
