@@ -1,0 +1,12 @@
+npx create-react-app "appname"
+cd "appname"
+npm install
+npm install axios
+npm start
+rm -rf .git
+
+##IF running a server locally, add db.json to the top level dir
+## Then add running server command to package.json under "scripts"
+## Add the following command: "server": "json-server -p3001 --watch db.json"
+## After this the server is viewable in localhost:3001 
+npm run server
