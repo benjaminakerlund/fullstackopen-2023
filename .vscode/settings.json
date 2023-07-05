@@ -1,0 +1,6 @@
+{
+    // Change the fontsize?
+    "editor.fontSize": 15,
+
+    "http.proxySupport": "off"
+}

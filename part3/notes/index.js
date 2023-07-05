@@ -1,4 +1,3 @@
-const { response } = require('express')
 const express = require('express')
 const app = express()
 
@@ -20,15 +19,51 @@ let notes = [
     }
 ]
 
+// take json-parser into use
+app.use(express.json())
+
+
+// HTTP requests
+// Get front page of API
 app.get('/', (request, response) => {
     response.send('<h1>Hello World!</h1>')
 })
-
+  
+// Get all notes
 app.get('/api/notes', (request, response) => {
     response.json(notes)
 })
+
+// Get specific note
+app.get('/api/notes/:id', (request, response) => {
+    const id = Number(request.params.id)
+    const note = notes.find(note => note.id === id)
+
+    if (note) {
+        response.json(note)
+    } else {
+        response.status(404).send("Page does not exist...").end()
+    }
+  })
+
+// Add a new note
+app.post('/api/notes', (request, response) => {
+    const note = request.body
+    console.log(note)
+    response.json(note)
+})
+  
+// Delete a note
+app.delete('/api/notes/:id', (request, response) => {
+    const id = Number(request.params.id)
+    notes = notes.filter(note => note.id !== id)
+
+    response.status(204).end()
+})
+
 
 const PORT = 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
+
