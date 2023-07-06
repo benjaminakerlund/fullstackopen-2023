@@ -1,8 +1,11 @@
 const express = require('express')
+var morgan = require('morgan')
+
 const app = express()
 
-/* take json-parser into use */
+/* Middleware */
 app.use(express.json())
+app.use(morgan('tiny'))
 
 /* Hard coded phonebook values for testing purposes */ 
 let persons = [
@@ -33,7 +36,7 @@ let persons = [
     }
 ]
 
-/* HTTP requests
+/* Routes: HTTP requests
 * GET 
     * 3.0 - return front page of api
     * 3.1 - return all numbers stored in api/persons 
@@ -95,7 +98,7 @@ app.post('/api/persons', (request, response) => { //3.5
     }
     else if (persons.find(p => p.name === body.name)) { // 3.6 name already in persons
         return response.status(400).json({
-            error: "Person already exists in phonebook"
+            error: "Person already exists in phonebook, name must be unique"
         })
     }
 
@@ -107,6 +110,15 @@ app.post('/api/persons', (request, response) => { //3.5
     persons = persons.concat(person)
     response.json(person)    
 })
+
+/* Middleware to catch requests made to non-existent routes resulting in an error message */
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({
+      error: "unknown endpoint"
+    })
+  }
+app.use(unknownEndpoint) // ?
+
 
 /* Run server */
 const PORT = 3001
