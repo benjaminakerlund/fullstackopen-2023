@@ -29,9 +29,10 @@ let persons = [
 ]
 
 /* HTTP requests
-* GET 3.1
+* GET 
     * return front page of api
-    * return all numbers stored in api/persons
+    * 3.1 - return all numbers stored in api/persons 
+    * 3.2 - return 
 */
 app.get('/', (request, response) => { 
     response.send('<h1>Hello World!</h1>')
@@ -39,6 +40,15 @@ app.get('/', (request, response) => {
 
 app.get('/api/persons', (request, response) => { //3.1
     response.json(persons)
+})
+
+app.get('/info', (request, response) => { //3.2
+    const sendInfo = `
+        <div>
+            <br>Phonebook has info for ${persons.length} people</br>
+            <br>${Date()}</br>
+        </div>`
+    response.send(sendInfo)
 })
 
 
