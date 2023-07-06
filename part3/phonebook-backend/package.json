@@ -1,7 +1,7 @@
 {
-  "name": "backend",
+  "name": "phonebook-backend",
   "version": "0.0.1",
-  "description": "",
+  "description": "Backend for phonebook webapp",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -11,7 +11,9 @@
   "author": "Benjamin Åkerlund",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.18.2"
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"

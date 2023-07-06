@@ -1,11 +1,13 @@
 const express = require('express')
 var morgan = require('morgan')
+const cors = require('cors')
 
 const app = express()
 
 /* Middleware */
 app.use(express.json())
 app.use(morgan('tiny'))
+app.use(cors())
 
 /* Hard coded phonebook values for testing purposes */ 
 let persons = [
@@ -121,7 +123,7 @@ app.use(unknownEndpoint) // ?
 
 
 /* Run server */
-const PORT = 3001
+const PORT = process.env.PORT || 3001 // changed for web hosting
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })

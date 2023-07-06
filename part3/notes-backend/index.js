@@ -1,27 +1,44 @@
 const express = require('express')
+const cors = require('cors')
 const app = express()
 
-// take json-parser into use
+
+const requestLogger = (request, response, next) => {
+    console.log('Method:', request.method)
+    console.log('Path:  ', request.path)
+    console.log('Body:  ', request.body)
+    console.log('---')
+    next()
+  }
+  
+  const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: 'unknown endpoint' })
+  }
+
+/* Middleware */
+app.use(cors())
 app.use(express.json())
+app.use(requestLogger)
+
 
 // Hard coded notes for test purposes, should be changed in the future to a db
 let notes = [
     {
-        id: 1,
-        content: "HTML is easy",
-        important: true
+      id: 1,
+      content: "HTML is easy",
+      important: true
     },
     {
-        id: 2,
-        content: "Browser can execute only JavaScript",
-        important: false        
+      id: 2,
+      content: "Browser can execute only JavaScript",
+      important: false
     },
     {
-        id: 3,
-        content: "GET and POST are the most important methods of HTTP proocol",
-        important: true
+      id: 3,
+      content: "GET and POST are the most important methods of HTTP protocol",
+      important: true
     }
-]
+  ]
 
 // useful functions as of now in here...
 const generateId = () => { // used in post request
@@ -30,8 +47,6 @@ const generateId = () => { // used in post request
     : 0
     return maxId + 1
 }
-
-
 
 
 // HTTP requests
@@ -86,6 +101,7 @@ app.delete('/api/notes/:id', (request, response) => {
     response.status(204).end()
 })
 
+app.use(unknownEndpoint)
 
 const PORT = 3001
 app.listen(PORT, () => {
