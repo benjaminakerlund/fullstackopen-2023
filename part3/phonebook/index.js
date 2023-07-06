@@ -32,7 +32,8 @@ let persons = [
 * GET 
     * return front page of api
     * 3.1 - return all numbers stored in api/persons 
-    * 3.2 - return 
+    * 3.2 - return info page
+    * 3.3 - return single person from list of persons
 */
 app.get('/', (request, response) => { 
     response.send('<h1>Hello World!</h1>')
@@ -50,6 +51,17 @@ app.get('/info', (request, response) => { //3.2
         </div>`
     response.send(sendInfo)
 })
+
+app.get('/api/persons/:id', (request, response) => {
+    const id = Number(request.params.id)
+    const person = persons.find(p => p.id === id)
+
+    if (person) {
+        response.json(person)
+    } else {
+        response.status(404).send("Number does not exist...").end()
+    }
+  })
 
 
 /* Run server */
