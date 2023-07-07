@@ -1,17 +1,19 @@
+require('dotenv').config // take into use environmental variables from .env
 const express = require('express')
 var morgan = require('morgan')
 const cors = require('cors')
 const static = require('static') // frontend deployment
-
+const Contact = require('./models/contact') // connect to DB
 const app = express()
 
-/* Middleware */
+
+/** Middleware */
 app.use(express.json())
 app.use(express.static('build')) // added for front end deployment
 app.use(morgan('tiny'))
 app.use(cors())
 
-/* Hard coded phonebook values for testing purposes */ 
+/* Hard coded phonebook values for testing purposes 
 let persons = [
     { 
       "id": 1,
@@ -38,7 +40,7 @@ let persons = [
         "name": "tester",
         "number": "12345"
     }
-]
+] */
 
 /* Routes: HTTP requests
 * GET 
@@ -51,8 +53,10 @@ let persons = [
     * 3.5 - add new phonebook entry by making HTTP POST request 
     * 3.6 - implement error handling for missing name and number or when entry is already made in phonebook
 */
-app.get('/api/persons', (request, response) => { //3.1
-    response.json(persons)
+app.get('/api/persons', (request, response) => { // 3.13
+    Contact.find({}).then(contacts => {
+        response.json(contacts)
+    })
 })
 
 app.get('/info', (request, response) => { //3.2
@@ -64,9 +68,12 @@ app.get('/info', (request, response) => { //3.2
     response.send(sendInfo)
 })
 
-app.get('/api/persons/:id', (request, response) => { //3.3
-    const id = Number(request.params.id)
-    const person = persons.find(p => p.id === id)
+app.get('/api/persons/:id', (request, response) => { // Broken still...
+    id = Number(request.params.id)
+    console.log("This is id: ", id)
+    const person = Contact.findById(id)
+    console.log("This is typeof person: ", typeof(person))
+    //persons.find(p => p.id === id)
 
     if (person) {
         response.json(person)
@@ -82,10 +89,10 @@ app.delete('/api/persons/:id', (request, response) => { //3.4
     response.status(204).end()
 })
 
-app.post('/api/persons', (request, response) => { //3.5
+app.post('/api/persons', (request, response) => { // 3.14
     const body = request.body
 
-    // Input error handling
+    // Input error handling 
     if (!body.name) { //3.6
         return response.status(400).json({
             error: "Name missing"
@@ -95,19 +102,22 @@ app.post('/api/persons', (request, response) => { //3.5
             error: "Number missing"
         })
     }
-    else if (persons.find(p => p.name === body.name)) { // 3.6 name already in persons
+    /*else if (persons.find(p => p.name === body.name)) { // 3.6 name already in persons
         return response.status(400).json({
             error: "Person already exists in phonebook, name must be unique"
         })
-    }
+    } */
 
-    const person = { //3.5
+    // Create new contact 
+    const contact = new Contact ({ // modified for DB
         name: body.name,
         number: body.number,
-        id: Math.floor(10 + (Math.random() * 100000)) // give random id between 10->100 000 (to not create duplicates with hardcoded entries)
-    }
-    persons = persons.concat(person)
-    response.json(person)    
+    })
+    
+    // Save contact to DB
+    contact.save().then(savedContact => {
+        response.json(savedContact)
+    })
 })
 
 /* Middleware to catch requests made to non-existent routes resulting in an error message */
@@ -120,7 +130,7 @@ app.use(unknownEndpoint) // ?
 
 
 /* Run server */
-const PORT = process.env.PORT || 3001 // changed for web hosting
+const PORT = process.env.PORT 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
