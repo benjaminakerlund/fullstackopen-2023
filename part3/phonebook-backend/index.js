@@ -7,9 +7,9 @@ const Contact = require('./models/contact') // connect to DB
 const app = express()
 
 
-/** Middleware */
-app.use(express.json())
+/** Middleware calls*/
 app.use(express.static('build')) // added for front end deployment
+app.use(express.json())
 app.use(morgan('tiny'))
 app.use(cors())
 
@@ -68,25 +68,27 @@ app.get('/info', (request, response) => { //3.2
     response.send(sendInfo)
 })
 
-app.get('/api/persons/:id', (request, response) => { // Broken still...
-    id = Number(request.params.id)
-    console.log("This is id: ", id)
-    const person = Contact.findById(id)
-    console.log("This is typeof person: ", typeof(person))
-    //persons.find(p => p.id === id)
+app.get('/api/persons/:id', (request, response, next) => { // 3.18* DONE and working (had to add next)
+    Contact
+        .findById(request.params.id)
+        .then(contact => {
+            if (contact) {
+                response.json(contact)
+            } else {
+                response.status(404).send({error: "This person doesn't exist."}) // 404 = not found
+            }
+        })
+        .catch(error => next(error)) // 3.16 moving error handling to middleware
+    })
 
-    if (person) {
-        response.json(person)
-    } else {
-        response.status(404).send("Number does not exist...").end()
-    }
-  })
-
-app.delete('/api/persons/:id', (request, response) => { //3.4
-    const id = Number(request.params.id)
-    persons = persons.filter(person => person.id !== id)
-
-    response.status(204).end()
+app.delete('/api/persons/:id', (request, response, next) => { // 3.15 fixed delete route (had to add next)
+    Contact
+        .findByIdAndRemove(request.params.id)
+        .then(result => {
+            console.log("Number deleted");
+            response.status(204).end()
+        })
+        .catch(error => next(error))
 })
 
 app.post('/api/persons', (request, response) => { // 3.14
@@ -126,7 +128,21 @@ const unknownEndpoint = (request, response) => {
       error: "unknown endpoint"
     })
   }
-app.use(unknownEndpoint) // ?
+
+/* Middleware to catch errors */
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+  
+    if (error.name === 'CastError') {
+      return response.status(400).send({ error: 'malformatted id' })
+    } 
+  
+    next(error)
+  }
+
+/* More middleware calls... */ 
+app.use(unknownEndpoint) // unknownEndPoint error handler always needs to be second to last if error handling present
+app.use(errorHandler) // 3.18*, error handling middleware has to be loaded last!
 
 
 /* Run server */
