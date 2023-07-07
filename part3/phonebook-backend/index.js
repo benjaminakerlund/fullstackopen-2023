@@ -59,13 +59,18 @@ app.get('/api/persons', (request, response) => { // 3.13
     })
 })
 
-app.get('/info', (request, response) => { //3.2
-    const sendInfo = `
-        <div>
-            <br>Phonebook has info for ${persons.length} people</br>
-            <br>${Date()}</br>
-        </div>`
-    response.send(sendInfo)
+app.get('/info', (request, response) => { //3.18* modifications to support DB
+    Contact
+        .count()
+        .then(count => {
+            console.log("This is count: ", count)
+            const sendInfo = `
+                <div>
+                    <br>Phonebook has info for ${count} people</br>
+                    <br>${Date()}</br>
+                </div>`
+            response.send(sendInfo)
+        })
 })
 
 app.get('/api/persons/:id', (request, response, next) => { // 3.18* DONE and working (had to add next)
@@ -120,6 +125,18 @@ app.post('/api/persons', (request, response) => { // 3.14
     contact.save().then(savedContact => {
         response.json(savedContact)
     })
+})
+
+app.put('/api/persons/:id', (request, response, next) => { // 3.17* Modify the backend to support requests for PUT 
+    const newNumber = request.body.number
+    const requestId = request.params.id
+
+    Contact
+        .findByIdAndUpdate(requestId, {number: newNumber})
+        .then(result => {
+            console.log("Updated number for: ", request.body.name, "to: ", newNumber)
+            response.status(200).end()
+        })
 })
 
 /* Middleware to catch requests made to non-existent routes resulting in an error message */
