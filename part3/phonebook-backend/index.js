@@ -2,7 +2,7 @@ require("dotenv").config // take into use environmental variables from .env
 const express = require("express")
 var morgan = require("morgan")
 const cors = require("cors")
-const static = require("static") // frontend deployment
+//const static = require("static") // frontend deployment
 const Contact = require("./models/contact") // connect to DB
 const app = express()
 
