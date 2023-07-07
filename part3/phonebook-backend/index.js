@@ -96,24 +96,8 @@ app.delete('/api/persons/:id', (request, response, next) => { // 3.15 fixed dele
         .catch(error => next(error))
 })
 
-app.post('/api/persons', (request, response) => { // 3.14
+app.post('/api/persons', (request, response, next) => { // 3.19 added validation (had to add next)
     const body = request.body
-
-    // Input error handling 
-    if (!body.name) { //3.6
-        return response.status(400).json({
-            error: "Name missing"
-        })
-    } else if (!body.number) { //3.6
-        return response.status(400).json({
-            error: "Number missing"
-        })
-    }
-    /*else if (persons.find(p => p.name === body.name)) { // 3.6 name already in persons
-        return response.status(400).json({
-            error: "Person already exists in phonebook, name must be unique"
-        })
-    } */
 
     // Create new contact 
     const contact = new Contact ({ // modified for DB
@@ -122,9 +106,11 @@ app.post('/api/persons', (request, response) => { // 3.14
     })
     
     // Save contact to DB
-    contact.save().then(savedContact => {
-        response.json(savedContact)
-    })
+    contact.save()
+        .then(savedContact => {
+            response.json(savedContact)
+        })
+        .catch(error => next(error))
 })
 
 app.put('/api/persons/:id', (request, response, next) => { // 3.17* Modify the backend to support requests for PUT 
@@ -132,11 +118,15 @@ app.put('/api/persons/:id', (request, response, next) => { // 3.17* Modify the b
     const requestId = request.params.id
 
     Contact
-        .findByIdAndUpdate(requestId, {number: newNumber})
+        .findByIdAndUpdate(requestId, 
+            {number: newNumber},
+            {new: true, runValidators: true, context: 'query'} // 3.19 add validation also when updating
+        )
         .then(result => {
             console.log("Updated number for: ", request.body.name, "to: ", newNumber)
             response.status(200).end()
         })
+        .catch(error => next(error))
 })
 
 /* Middleware to catch requests made to non-existent routes resulting in an error message */
@@ -153,6 +143,9 @@ const errorHandler = (error, request, response, next) => {
     if (error.name === 'CastError') {
       return response.status(400).send({ error: 'malformatted id' })
     } 
+    else if (error.name === 'ValidationError') {
+        return response.status(400).json({ error: error.message })
+    }
   
     next(error)
   }

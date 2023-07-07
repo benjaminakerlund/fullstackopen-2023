@@ -43,9 +43,16 @@ const App = () => {
         setPersons(persons.map(p => p.id !== person.id ? p :updatedPerson ))
         notifyWith(`phon number of ${person.name} updated!`)
       })
-      .catch(() => {
-        notifyWith(`${person.name} has already been removed`, 'error')
-        setPersons(persons.filter(p => p.id !== person.id))
+      .catch(error => { //3.19*
+        if (error) {
+          console.log(error.response.data.error)
+          notifyWith(error.response.data.error, 'error')
+        } else { 
+          //This was the old error message for when removing from two browsers simultaneously...
+          // this did not work before this anyways...a
+          notifyWith(`${person.name} has already been removed`, 'error') 
+          setPersons(persons.filter(p => p.id !== person.id)) 
+        }
       })
 
       cleanForm()
@@ -70,6 +77,9 @@ const App = () => {
       notifyWith(`${createdPerson.name} added!`)
 
       cleanForm()
+    })
+    .catch(error => {
+      notifyWith(error.response.data.error, 'error') // 3.19*
     })
   }
 
