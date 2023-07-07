@@ -1,11 +1,13 @@
 const express = require('express')
 var morgan = require('morgan')
 const cors = require('cors')
+const static = require('static') // frontend deployment
 
 const app = express()
 
 /* Middleware */
 app.use(express.json())
+app.use(express.static('build')) // added for front end deployment
 app.use(morgan('tiny'))
 app.use(cors())
 
@@ -40,7 +42,6 @@ let persons = [
 
 /* Routes: HTTP requests
 * GET 
-    * 3.0 - return front page of api
     * 3.1 - return all numbers stored in api/persons 
     * 3.2 - return info page
     * 3.3 - return single person from list of persons
@@ -50,9 +51,9 @@ let persons = [
     * 3.5 - add new phonebook entry by making HTTP POST request 
     * 3.6 - implement error handling for missing name and number or when entry is already made in phonebook
 */
-app.get('/', (request, response) => { // 3.0
+/*app.get('/', (request, response) => { // 3.0
     response.send('<h1>Hello World!</h1>')
-})
+})*/
 
 app.get('/api/persons', (request, response) => { //3.1
     response.json(persons)
