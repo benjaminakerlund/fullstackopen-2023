@@ -17,9 +17,7 @@ mongoose.set('strictQuery',false)
 mongoose.connect(url)
 
 
-/** Create entry schema for singular contacts
- * and initialize
- */
+/** Create entry schema for singular contacts */
 const contactSchema = new mongoose.Schema({
     name: String,
     number: String,
