@@ -1,22 +1,4 @@
-require("dotenv").config() // take into use environmental variables from .env
-
-
 const mongoose = require("mongoose")
-
-mongoose.set("strictQuery", false)
-
-
-const url = process.env.MONGODB_URI
-
-console.log("connecting to", url)
-
-mongoose.connect(url)
-	.then(() => {
-		console.log("connected to MongoDB")
-	})
-	.catch((error) => {
-		console.log("error connecting to MongoDB:", error.message)
-	})
 
 const contactSchema = new mongoose.Schema({
 	// 3.19?? adding validation to schema!
