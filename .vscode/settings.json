@@ -2,5 +2,8 @@
     // Change the fontsize?
     "editor.fontSize": 15,
 
-    "http.proxySupport": "off"
+    "http.proxySupport": "off",
+    "editor.tabCompletion": "on",
+    "editor.detectIndentation": false,
+    "prettier.useTabs": true
 }
