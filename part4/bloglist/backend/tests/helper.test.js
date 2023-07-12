@@ -14,7 +14,7 @@ const bloglist = [
 	title: "I forgot titles in the other blogs :D",
 	author: "PostMan",
 	url: "https://www.postman.com/",
-	likes: 100,
+	likes: 101,
 	__v: 0
 	},
 	{
@@ -24,7 +24,15 @@ const bloglist = [
 	url: "https://www.postman.com/",
 	likes: 100000,
 	__v: 0
-	}
+	},
+    {
+    _id: "64abe3a9bd4efe3ada2e1d99",
+    title: "Not a PostMan blog",
+    author: "Not PostMan",
+    url: "https://www.lollercoaster.com/",
+    likes: 100,
+    __v: 0
+    }
 ]
 
 describe("Testing dummy function: ", () => {
@@ -49,7 +57,7 @@ describe("Testing helper function totalLikes:", () => {
 
     test("totalLikes returns the correct value", () => {
         expect(helper.totalLikes(bloglist))
-            .toBe(100100)
+            .toBe(100201)
     })
 })
 
@@ -65,4 +73,21 @@ describe("Testing helper function favBlog:", () => {
         expect(helper.favBlog(bloglist))
             .toEqual(output)
     })
+    
+    // Only one test here, since nothing more about the return of the function was defined... 
+    // eg. what to do when a list of 0 is run through favBlog
 })
+
+describe("Testing helper function mostBlogs:", () => {
+    // mostLikes tester for 4.6*
+    test("mostBlogs returns the author with most blogs", () => {
+        output = {
+            author: "PostMan",
+            blogs: 2
+        }
+
+        expect(helper.mostBlogs(bloglist))
+            .toEqual(output)
+    })
+})
+
