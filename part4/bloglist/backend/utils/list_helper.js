@@ -44,10 +44,27 @@ const mostBlogs = (blogs) => {
     return blogs.reduce(reducer, [])[0]
 }
 
+const mostLikes = (blogs) => {
+    const reducer = (i, blog) => {
+        let temp = i.find(item => item.author === blog.author)
+
+        if (!temp) {
+            return i.concat({ author: blog.author, likes: blog.likes})
+        }
+
+        temp.likes += blog.likes
+        return i
+    }
+     
+    return favBlog(blogs.reduce(reducer, []))
+}
+
+
 module.exports = {
     dummy,
     totalLikes,
     favBlog,
-    mostBlogs
+    mostBlogs,
+    mostLikes
     
 }

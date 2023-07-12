@@ -79,7 +79,7 @@ describe("Testing helper function favBlog:", () => {
 })
 
 describe("Testing helper function mostBlogs:", () => {
-    // mostLikes tester for 4.6*
+    // mostBlogs tester for 4.6*
     test("mostBlogs returns the author with most blogs", () => {
         output = {
             author: "PostMan",
@@ -91,3 +91,15 @@ describe("Testing helper function mostBlogs:", () => {
     })
 })
 
+describe("Testing helper function mostLikes:", () => {
+    // mostLikes tester for 4.7*
+    test("mostLikes returns the author with most likes", () => {
+        output = {
+            author: "PostMan",
+            likes: 100101
+        }
+
+        expect(helper.mostLikes(bloglist))
+            .toEqual(output)
+    })
+})
