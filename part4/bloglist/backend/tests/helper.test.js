@@ -25,16 +25,18 @@ const bloglist = [
 	likes: 100000,
 	__v: 0
 	}
-	]
+]
 
-
-describe("Testing if the helper function ", () => {
+describe("Testing dummy function: ", () => {
+    // dummy function tester for 4.3*
     test("dummy function returns 1", () => {
         expect(helper.dummy())
             .toBe(1)
     })
+})
 
-    // Total likes
+describe("Testing helper function totalLikes:", () => {
+    // totalLikes tester for 4.4
     test("totalLikes returns 0 when an empty bloglist is fed as input", () => {
         expect(helper.totalLikes([]))
             .toBe(0)
@@ -49,9 +51,18 @@ describe("Testing if the helper function ", () => {
         expect(helper.totalLikes(bloglist))
             .toBe(100100)
     })
-
-    
 })
 
+describe("Testing helper function favBlog:", () => {
+    // favouriteBlog tester for 4.5*
+    test("favBlog returns the blog with most likes", () => {
+        output = {
+            title: "Now adding a blog to DB has worked twice!",
+            author: "PostMan",
+            likes: 100000
+        }
 
-
+        expect(helper.favBlog(bloglist))
+            .toEqual(output)
+    })
+})
