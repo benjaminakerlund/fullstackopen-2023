@@ -9,6 +9,7 @@
     "dev": "nodemon index.js -L",
     "build:ui": "rm -rf build && cd ../frontend/ && npm run build && cp -r build ../backend",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push",
+    "jest": "jest --verbose",
     "lint": "eslint ."
   },
   "author": "Benjamin Åkerlund",
@@ -21,6 +22,10 @@
   },
   "devDependencies": {
     "eslint": "^8.44.0",
+    "jest": "^29.6.1",
     "nodemon": "^3.0.1"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }

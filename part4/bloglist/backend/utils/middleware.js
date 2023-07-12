@@ -13,7 +13,7 @@ const unknownEndpoint = (request, response) => {
 	response.status(404).send({
 		error: "unknown endpoint"
 	})
-} // 
+} //
 
 /* Middleware to catch errors */
 const errorHandler = (error, request, response, next) => {
