@@ -4,13 +4,18 @@ const Blog = require("../models/blog")
 
 /** Routes: HTTP requests */
 // show all blogs saved to DB
-blogsRouter.get("/", (request, response) => {
-	console.log("Inside GET route")
-	Blog
+blogsRouter.get("/", async (request, response) => {
+	/* Blog
 		.find({})
 		.then(blogs => {
 			response.json(blogs)
-		})
+		}) */
+        
+    
+    const blogs = await Blog
+        .find({})
+        .then(blogs => {
+            response.json(blogs)}) 
 })
 
 // add a blog to DB

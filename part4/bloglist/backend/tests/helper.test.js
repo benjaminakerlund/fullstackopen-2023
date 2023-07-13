@@ -35,7 +35,7 @@ const bloglist = [
     }
 ]
 
-describe("Testing dummy function: ", () => {
+describe("001 Testing dummy function: ", () => {
     // dummy function tester for 4.3*
     test("dummy function returns 1", () => {
         expect(helper.dummy())
@@ -43,19 +43,19 @@ describe("Testing dummy function: ", () => {
     })
 })
 
-describe("Testing helper function totalLikes:", () => {
+describe("002 Testing helper function totalLikes:", () => {
     // totalLikes tester for 4.4
     test("totalLikes returns 0 when an empty bloglist is fed as input", () => {
         expect(helper.totalLikes([]))
             .toBe(0)
     })
 
-    test("totalLikes returns the correct value for a list of length 1", () => {
+    test("003 totalLikes returns the correct value for a list of length 1", () => {
         expect(helper.totalLikes(bloglist1))
             .toBe(bloglist1[0].likes)
     })
 
-    test("totalLikes returns the correct value", () => {
+    test("004 totalLikes returns the correct value", () => {
         expect(helper.totalLikes(bloglist))
             .toBe(100201)
     })
@@ -63,7 +63,7 @@ describe("Testing helper function totalLikes:", () => {
 
 describe("Testing helper function favBlog:", () => {
     // favouriteBlog tester for 4.5*
-    test("favBlog returns the blog with most likes", () => {
+    test("005 favBlog returns the blog with most likes", () => {
         output = {
             title: "Now adding a blog to DB has worked twice!",
             author: "PostMan",
@@ -80,7 +80,7 @@ describe("Testing helper function favBlog:", () => {
 
 describe("Testing helper function mostBlogs:", () => {
     // mostBlogs tester for 4.6*
-    test("mostBlogs returns the author with most blogs", () => {
+    test("006 mostBlogs returns the author with most blogs", () => {
         output = {
             author: "PostMan",
             blogs: 2
@@ -93,7 +93,7 @@ describe("Testing helper function mostBlogs:", () => {
 
 describe("Testing helper function mostLikes:", () => {
     // mostLikes tester for 4.7*
-    test("mostLikes returns the author with most likes", () => {
+    test("007 mostLikes returns the author with most likes", () => {
         output = {
             author: "PostMan",
             likes: 100101
