@@ -1,10 +1,17 @@
 const mongoose = require("mongoose")
 
 const blogSchema = new mongoose.Schema({
-	title: String,
+	title: {
+        type: String,
+        minLength: 3,
+        required: [true, "Each blog entry has to have a title."]
+    },
 	author: String,
 	url: String,
-	likes: Number
+	likes: {
+        type: Number,
+        default: 0 // 4.11*
+    }
 })
 
 

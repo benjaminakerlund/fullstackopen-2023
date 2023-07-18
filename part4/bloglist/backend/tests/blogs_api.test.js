@@ -1,37 +1,18 @@
 const mongoose = require("mongoose")
 const supertest = require("supertest")
+const helper = require("./test_helper")
 const app = require("../app")
 const Blog = require("../models/blog")
 
 const api = supertest(app) // wrap the express application with a supertest function into a superagent object
 
-const initialBlogs = [
-    {
-        title: "The Naked Chef",
-        author: "Jamie Oliver",
-        url: "www.nakedchef.com/notPorn",
-        likes: 44,
-    },
-    {
-        title: "How to not cook like old people f*ck",
-        author: "Gordon Ramsay",
-        url: "www.gordo_not_old.com/cookingblog",
-        likes: 69,
-    },
-    {
-        title: "Chefs vs. Wild",
-        author: "Various Artists",
-        url: "www.chefsvswild.com/signup",
-        likes: 100,
-    }
-]
 
 // reset the database to the same state before each test is run
 beforeEach(async () => {
     await Blog.deleteMany({})
     
-    for (i=0; i < initialBlogs.length; i++) { // Post each initialBlog to DB
-        blogObject = new Blog(initialBlogs[i])
+    for (i=0; i < helper.initialBlogs.length; i++) { // Post each initialBlog to DB
+        blogObject = new Blog(helper.initialBlogs[i])
         await blogObject.save()
     }
 })
@@ -47,7 +28,7 @@ test("012 All blogs are returned", async() => { // 4.8
     const response = await api.get("/api/blogs")
 
     expect(response.body)
-        .toHaveLength(initialBlogs.length)
+        .toHaveLength(helper.initialBlogs.length)
 })
 
 test("013 The first blog is about nudity", async() => { // 4.8 kind of
@@ -77,24 +58,51 @@ test("016 Verify that the POST request to the base url succesfully creates a new
     const testData = {
         "title": "The testy chef",
         "author": "E. Jack Ulate",
-        "url": "www.meatspin.com"
+        "url": "www.meatspin.com",
+        "likes": 69
     }
     
     await api
         .post("/api/blogs")
         .send(testData)
-        .expect(201) // testing returned code
+        .expect(201) // testing returned code - 201 = created
         .expect('Content-Type', /application\/json/) // testing type of returned data
         
-    const response = await api.get("/api/blogs")
-    const titles = response.body.map(r => r.title)
+    const blogsAtEnd = await helper.blogsInDb() // testing that a new blog item was added to list and the length of blogs has increased
+    expect(blogsAtEnd)
+        .toHaveLength(helper.initialBlogs.length + 1)
 
-    expect(response.body) // testing that a new blog item was added to list and the length of blogs has increased
-        .toHaveLength(initialBlogs.length + 1) 
-
+    const titles = blogsAtEnd.map(r => r.title)
     expect(titles)
         .toContain("The testy chef") // testing specific content being added to bloglist
 })
+
+
+test("017 A blog without likes will default to 0" , async() => { // 4.11*
+    const testData = {
+        "title": "No Likes",
+        "author": "Mike Hawk",
+        "url": "www.mikehawk.com"
+    }
+
+    await api
+        .post("/api/blogs")
+        .send(testData)
+        .expect(201)
+
+    const blogsAtEnd = await helper.blogsInDb()
+
+    expect(blogsAtEnd[3].likes) // Check wether likes field is defined
+        .toBeDefined()
+    
+    expect(blogsAtEnd[3].likes) // Check wether likes field defaults to 0
+        .toBe(0)
+})
+
+
+
+
+
 
 afterAll(async() => {
     await mongoose.connection.close()
