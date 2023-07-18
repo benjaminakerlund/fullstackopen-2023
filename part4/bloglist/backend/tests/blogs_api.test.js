@@ -73,6 +73,29 @@ test("015 Test that the unique identifier property if the blog posts is named id
 })
 
 
+test("016 Verify that the POST request to the base url succesfully creates a new blog post", async() => { // 4.10
+    const testData = {
+        "title": "The testy chef",
+        "author": "E. Jack Ulate",
+        "url": "www.meatspin.com"
+    }
+    
+    await api
+        .post("/api/blogs")
+        .send(testData)
+        .expect(201) // testing returned code
+        .expect('Content-Type', /application\/json/) // testing type of returned data
+        
+    const response = await api.get("/api/blogs")
+    const titles = response.body.map(r => r.title)
+
+    expect(response.body) // testing that a new blog item was added to list and the length of blogs has increased
+        .toHaveLength(initialBlogs.length + 1) 
+
+    expect(titles)
+        .toContain("The testy chef") // testing specific content being added to bloglist
+})
+
 afterAll(async() => {
     await mongoose.connection.close()
 })
