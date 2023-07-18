@@ -50,20 +50,28 @@ test("012 All blogs are returned", async() => { // 4.8
         .toHaveLength(initialBlogs.length)
 })
 
-test("013 The first blog is about nudity", async() => {
+test("013 The first blog is about nudity", async() => { // 4.8 kind of
     const response = await api.get("/api/blogs")
 
     expect(response.body[0].title) 
         .toBe("The Naked Chef") 
 })
 
-test("014 A specific blog is within the returned blogs", async() => {
+test("014 A specific blog is within the returned blogs", async() => { // 4.8 kind of
     const response = await api.get("/api/blogs")
 
     const contents = response.body.map(r => r.title)
     expect(contents)
         .toContain("Chefs vs. Wild")
 }) 
+
+test("015 Test that the unique identifier property if the blog posts is named id and not", async() => { // 4.9
+    const response = await api.get("/api/blogs")
+
+    expect(response.body[0].id) 
+        .toBeDefined()
+})
+
 
 afterAll(async() => {
     await mongoose.connection.close()
