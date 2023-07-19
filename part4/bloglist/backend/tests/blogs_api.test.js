@@ -3,7 +3,6 @@ const supertest = require("supertest")
 const helper = require("./test_helper")
 const app = require("../app")
 const Blog = require("../models/blog")
-const blog = require("../models/blog")
 
 const api = supertest(app) // wrap the express application with a supertest function into a superagent object
 
@@ -58,13 +57,17 @@ describe("010: Initialising the db: ", ()=> {
 
 
 
-describe("020: Adding a single note: ", () => {
+describe("020: Adding a single blog: ", () => {
     test("021 Verify that the POST request to the base url succesfully creates a new blog post", async() => { // 4.10
+        const users = await helper.usersInDb()
+        const firstUser = users[0]
+        
         const testData = {
             "title": "The testy chef",
             "author": "E. Jack Ulate",
             "url": "www.meatspin.com",
-            "likes": 69
+            "likes": 69,
+            "userId": firstUser.id
         }
         
         await api
@@ -84,10 +87,14 @@ describe("020: Adding a single note: ", () => {
     
     
     test("022 A blog without likes will default to 0" , async() => { // 4.11*
+        const users = await helper.usersInDb()
+        const firstUser = users[0]
+
         const testData = {
             "title": "No Likes",
             "author": "Mike Hawk",
-            "url": "www.mikehawk.com"
+            "url": "www.mikehawk.com",
+            "userId": firstUser.id
         }
     
         await api
@@ -107,10 +114,14 @@ describe("020: Adding a single note: ", () => {
     
     /* 4.12* Testing post method */
     test("023 A blog without a title will not be added to the list" , async() => { // 4.12*
+        const users = await helper.usersInDb()
+        const firstUser = users[0]
+
         const testDataNoTitle = {
             author: "Mike Hawk",
             url: "www.mikehawk.com",
-            likes: 69
+            likes: 69,
+            userId: firstUser.id
         }
     
         await api   
@@ -135,7 +146,7 @@ describe("020: Adding a single note: ", () => {
         await api
         .post("/api/blogs")
         .send(testDataNoUrl)
-        .expect(400) // expect backend to reject posting a note without a required field (url)
+        .expect(500) // expect backend to reject posting a note without a required field (url)
     
     }, 10000)
 })

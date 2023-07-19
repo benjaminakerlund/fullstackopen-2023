@@ -1,23 +1,36 @@
 const blogsRouter = require("express").Router()
 const Blog = require("../models/blog")
+const User = require("../models/user")
 
 
 /** Routes: HTTP requests */
 // show all blogs saved to DB
 blogsRouter.get("/", async (request, response) => { // 4.8 changed from promises to async/await
     const blogs = await Blog // 4.8 changed from promises to async/await
-        .find({})
+        .find({}).populate("user", {username: 1, name: 1})
         .then(blogs => {
             response.json(blogs)}) 
 })
 
 // add a blog to DB
 blogsRouter.post("/", async (request, response) => {
-    const blog = new Blog(request.body) 
+    const body = request.body
+
+    const user = await User.findById(body.userId)
+
+    const blog = new Blog({
+        title: body.title,
+        author: body.author,
+        url: body.url,
+        likes: body.likes,
+        user: user.id
+    }) 
 
     // 4.12*? adding error handling
-    if (blog.title && blog.url) {
+    if (body.title && body.url) {
         const savedBlog = await blog.save() //4.10
+        user.blogs = user.blogs.concat(savedBlog.id)
+        await user.save()
         response.status(201).json(savedBlog)
     } else {
         response.status(400).end()
