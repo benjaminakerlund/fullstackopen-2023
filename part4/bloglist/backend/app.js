@@ -1,5 +1,6 @@
 const config = require("./utils/config")
 const express = require("express")
+require("express-async-errors") // 4b, eliminating try-catch
 const app = express()
 const cors = require("cors")
 const blogsRouter = require("./controllers/blogs")
