@@ -3,12 +3,19 @@ const mongoose = require("mongoose")
 const blogSchema = new mongoose.Schema({
 	title: {
         type: String,
-        minLength: 3,
-        required: [true, "Each blog entry has to have a title."]
+        required: [true, "Each blog entry has to have a title."] //4.12*
     },
-	author: String,
-	url: String,
-	likes: {
+	
+    author: {
+        type: String
+    },
+	
+    url: {
+        type: String,
+        required: true //4.12* - This should work but for some reason keeps running the test on forever...
+    },
+	
+    likes: {
         type: Number,
         default: 0 // 4.11*
     }

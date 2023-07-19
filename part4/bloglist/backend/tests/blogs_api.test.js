@@ -100,9 +100,74 @@ test("017 A blog without likes will default to 0" , async() => { // 4.11*
 })
 
 
+/* 4.12* Testing post method */
+test("020 A blog without a title will not be added to the list" , async() => { // 4.12*
+    const testDataNoTitle = {
+        author: "Mike Hawk",
+        url: "www.mikehawk.com",
+        likes: 69
+    }
+
+    await api   
+        .post("/api/blogs")
+        .send(testDataNoTitle)
+        .expect(400) // expect backend to reject posting a note without a required field (title)
+
+    const blogsAtEnd = await helper.blogsInDb()
+
+    expect(blogsAtEnd)
+        .toHaveLength(helper.initialBlogs.length)
+
+}, 10000)
+
+test("021 A blog without a url will not be added to the list" , async() => { // 4.12*
+    const testDataNoUrl = {
+        title: "Testy blog - no url",
+        author: "Mike Hawk",
+        likes: 69
+    }
+
+    await api
+    .post("/api/blogs")
+    .send(testDataNoUrl)
+    .expect(400) // expect backend to reject posting a note without a required field (url)
+
+}, 10000)
 
 
 
+
+// Extra tests
+test("030 Fetch a individual blog", async() => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToView = blogsAtStart[0]
+
+    const resultBlog = await api
+        .get(`/api/blogs/${blogToView.id}`)
+        .expect(200)
+        .expect("Content-Type", /application\/json/)
+
+    expect(resultBlog.body)
+        .toEqual(blogToView)
+})
+
+test("031 Delete individual blog", async() => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToDelete = blogsAtStart[0]
+
+    await api
+        .delete(`/api/blogs/${blogToDelete.id}`)
+        .expect(204)
+        
+    const blogsAtEnd = await helper.blogsInDb()
+
+    expect(blogsAtEnd)
+        .toHaveLength(helper.initialBlogs.length - 1)
+
+    const titles = blogsAtEnd.map(r => r.title)
+    expect(titles)
+        .not.toContain(blogToDelete.title)
+})
 
 afterAll(async() => {
     await mongoose.connection.close()
