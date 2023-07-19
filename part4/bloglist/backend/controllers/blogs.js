@@ -5,13 +5,6 @@ const Blog = require("../models/blog")
 /** Routes: HTTP requests */
 // show all blogs saved to DB
 blogsRouter.get("/", async (request, response) => { // 4.8 changed from promises to async/await
-	/* PROMISES METHOD
-    Blog
-		.find({})
-		.then(blogs => {
-			response.json(blogs)
-		}) */
-    
     const blogs = await Blog // 4.8 changed from promises to async/await
         .find({})
         .then(blogs => {
@@ -20,14 +13,6 @@ blogsRouter.get("/", async (request, response) => { // 4.8 changed from promises
 
 // add a blog to DB
 blogsRouter.post("/", async (request, response) => {
-	/* PROMISES METHOD
-    const blog = new Blog(request.body)
-	blog
-		.save()
-		.then(result => {
-			response.status(201).json(result)
-		}) */
-
     const blog = new Blog(request.body) 
 
     // 4.12*? adding error handling
@@ -40,7 +25,26 @@ blogsRouter.post("/", async (request, response) => {
 
 })
 
-// This is extra???
+/* 4.13 Implement functionality for deleting a single blog post resource */
+blogsRouter.delete("/:id", async (request, response, next) => {
+    await Blog.findByIdAndRemove(request.params.id)
+    response.status(204).end()  
+})
+
+/* 4.14 implement functionality for updating the information of an individual blog post */
+blogsRouter.put("/:id", async (request, response, next) => {
+    const blog = request.body
+
+    Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
+        .then(updatedBlog => {
+            console.log("Updated information for: ", request.body, " to: ", blog)
+            response.status(200).json(updatedBlog)
+        })
+        .catch(error => next(error))
+})
+
+
+// Extra?
 blogsRouter.get("/:id", async (request, response, next) => {
     const blog = await Blog.findById(request.params.id)
     if (blog) {
@@ -48,12 +52,6 @@ blogsRouter.get("/:id", async (request, response, next) => {
     } else {
         response.status(404).end()
     } 
-
-})
-
-blogsRouter.delete("/:id", async (request, response, next) => {
-    await Blog.findByIdAndRemove(request.params.id)
-    response.status(204).end()  
 })
 
 module.exports = blogsRouter
