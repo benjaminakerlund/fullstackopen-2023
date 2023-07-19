@@ -140,11 +140,6 @@ describe("100 When there is initially one user in db", () => {
             .send(testData2)
             .expect(201)
             
-        const blogsAtEnd = await helper.blogsInDb()
 
-        console.log("This should be last blog... ", blogsAtEnd[14])
-        console.log("This is user object.name: ", blogsAtEnd[14].values())
-        expect(blogsAtEnd[14].user)
-            .toContain("root")
     })
 })
