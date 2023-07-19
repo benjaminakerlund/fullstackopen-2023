@@ -32,10 +32,20 @@ const errorHandler = (error, request, response, next) => {
 	next(error)
 } 
 
+// 4.20* put token request function into middle ware
+const tokenExtractor = request => { // 4.18
+    const authorization = request.get("authorization")
+    if (authorization && authorization.startsWith("Bearer ")) {
+        return authorization.replace("Bearer ", "")
+    }
+    return null
+}
+
 
 
 module.exports = {
 	requestLogger,
 	unknownEndpoint,
-	errorHandler
+	errorHandler,
+    tokenExtractor
 }
