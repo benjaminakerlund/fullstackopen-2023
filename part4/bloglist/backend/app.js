@@ -10,6 +10,8 @@ const middleware = require("./utils/middleware")
 const logger = require("./utils/logger")
 const mongoose = require("mongoose")
 
+const tokenExtractor = middleware.tokenExtractor
+
 
 mongoose.set("strictQuery", false)
 
@@ -30,6 +32,7 @@ app.use(express.json())
 app.use("/api/blogs", blogsRouter)
 app.use("/api/users", usersRouter)
 app.use("/api/login", loginRouter)
+
 
 app.use(middleware.tokenExtractor) // 4.20*
 
