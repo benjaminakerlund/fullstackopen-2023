@@ -9,6 +9,10 @@ const App = () => {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [user, setUser] = useState(null)
+    const [blogTitle, setBlogTitle] = useState("") //5.3
+    const [blogAuthor, setBlogAuthor] = useState("") //5.3
+    const [blogUrl, setBlogUrl] = useState("") //5.3
+
 
     useEffect(() => {
         blogService.getAll().then(blogs =>
@@ -22,7 +26,8 @@ const App = () => {
         if (loggedUserJSON) {
             const user = JSON.parse(loggedUserJSON)
             setUser(user)
-            //blogService.setToken(user.token)
+            // uncomment for 5.3 !!!
+            blogService.setToken(user.token)
         }
     }, [])
 
@@ -38,6 +43,7 @@ const App = () => {
             window.localStorage.setItem( // 5.2
                 "loggedBlogAppUser", JSON.stringify(user)
             )
+            blogService.setToken(user.token) // 5.3
             setUser(user)
             setUsername("")
             setPassword("")
@@ -55,6 +61,22 @@ const App = () => {
         console.log("pressed logout")
         window.localStorage.clear()
         setUser(null)
+    }
+
+    const handleCreate = (event) => { //5.3
+        console.log("inside handleCreate")
+        const blogObject = {
+            user: user,
+            title: blogTitle,
+            author: blogAuthor,
+            url: blogUrl
+        }
+
+        const auth = user.token
+        blogService.create(blogObject, auth)
+            .then(blog => {
+                setBlogs(blogs.concat(blog))
+            })
     }
 
     const loginForm = () => {
@@ -88,26 +110,70 @@ const App = () => {
         )
     }
 
-    const showBlogs = () => {
+    const blogForm = () => {
         return (
             <div>
                 <div>{user.name} is logged in
                 <button onClick={handleLogout}>logout</button> </div>
                 <br></br>
+                {newBlogForm()}
+                
                 {blogs.map(blog =>
                 <Blog key={blog.id} blog={blog} />
                     )}
             </div> 
+            
         )
     }
 
+    const newBlogForm = () => {
+        console.log("Inside addblog")
+        return(
+            <div>
+                <h2>create new</h2>
+                <form onSubmit={handleCreate}>
+                    <div>
+                        title:
+                        <input 
+                            type="text"
+                            value={blogTitle}
+                            name="BlogTitle"
+                            onChange={({ target }) => setBlogTitle(target.value)}
+                            />
+                    </div>
+                    <div>
+                        author:
+                        <input 
+                            type="text"
+                            value={blogAuthor}
+                            name="BlogAuthor"
+                            onChange={({ target }) => setBlogAuthor(target.value)}
+                            />
+                    </div>
+                    <div>
+                        url:
+                        <input 
+                            type="text"
+                            value={blogUrl}
+                            name="BlogUrl"
+                            onChange={({ target }) => setBlogUrl(target.value)}
+                            />
+                    </div>
+                    <div>
+                        <button type="submit">create</button>
+                    </div>
+                </form>
+            </div>
+        )
+    }
   
     return (
         <div>
         <h1>blogs</h1>
             {user === null
             ? loginForm()
-            : showBlogs() }
+            : blogForm() 
+            }
         </div>
     )
 }

@@ -13,12 +13,24 @@ blogsRouter.get("/", async (request, response) => { // 4.8 changed from promises
             response.json(blogs)}) 
 })
 
-// add a blog to DB
-blogsRouter.post("/", async (request, response, next) => {
-    const body = request.body
+/* Middleware... because for some reason it won't work when I put it into middleware file...*/
+const getTokenFrom = (request, response, next) => { // 4.18
+    const authorization = request.get("authorization")
+    if (authorization && authorization.startsWith("Bearer ")) {
+        return authorization.replace("Bearer ", "")
+    }
+    return null
+}
 
+
+// add a blog to DB
+blogsRouter.post("/", async (request, response) => {
+    const body = request.body
+    console.log("Inside blogsRouter.post route...")
+    console.log("This is request.token: ", request.token)
     // 4.18 addition, user token 
-    const decodedToken = jwt.verify(request.token, process.env.SECRET)
+    const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET) //change into request.token
+    console.log("This is decodedToken: ", decodedToken)
     if (!request.token && !decodedToken.id) {
         return response.status(401).json({ error: "token missing or invalid"})
     }
