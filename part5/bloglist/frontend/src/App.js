@@ -77,17 +77,17 @@ const App = () => {
         notifyWith("Logout succesful")
     }
 
-    const handleCreate = (event) => { //5.3
-        event.preventDefault()
+    const handleCreate = (props) => { //5.3
         const blogObject = {
             user: user,
-            title: blogTitle,
-            author: blogAuthor,
-            url: blogUrl
+            title: props.title,
+            author: props.author,
+            url: props.url
         }
 
         const auth = user.token
-        blogService.create(blogObject, auth)
+        blogService
+            .create(blogObject, auth)
             .then(blog => {
                 setBlogs(blogs.concat(blog))
             })
@@ -96,7 +96,6 @@ const App = () => {
     }
 
 
-    
 
     const showBlogs = () => { //5.6 moved NewBlogForm to own component
         return (
@@ -106,14 +105,7 @@ const App = () => {
                 <br></br>
 
                 <Togglable buttonLabel="new blog">
-                    <NewBlogForm
-                        handleSubmit={handleCreate}
-                        handleBlogTitleChange={({ target }) => setBlogTitle(target.value)}
-                        handleBlogAuthorChange={({ target }) => setBlogAuthor(target.value)}
-                        handleBlogUrlChange={({ target }) => setBlogUrl(target.value)}
-                        title={blogTitle}
-                        author={blogAuthor}
-                        url={blogUrl} />
+                    <NewBlogForm createBlog={handleCreate} />                    
                 </Togglable>
                 
                 
