@@ -5,6 +5,7 @@ import loginService from "./services/login"
 import Notification from "./components/Notification"
 import LoginForm from "./components/LoginForm"
 import NewBlogForm from "./components/NewBlogForm"
+import Togglable from "./components/Togglable"
 
 const App = () => {
     const [blogs, setBlogs] = useState([])
@@ -95,9 +96,7 @@ const App = () => {
     }
 
 
-    /* For some reason needed for hiding create form */
-    const hideWhenVisible = { display: createVisible ? 'none' : '' }
-    const showWhenVisible = { display: createVisible ? '' : 'none' }
+    
 
     const showBlogs = () => { //5.6 moved NewBlogForm to own component
         return (
@@ -106,11 +105,7 @@ const App = () => {
                 <button onClick={handleLogout}>logout</button> </div>
                 <br></br>
 
-                <div style={hideWhenVisible}>
-                    <button onClick={() => setCreateVisible(true)}>new blog</button>
-                </div>
-
-                <div style={showWhenVisible}>
+                <Togglable buttonLabel="new blog">
                     <NewBlogForm
                         handleSubmit={handleCreate}
                         handleBlogTitleChange={({ target }) => setBlogTitle(target.value)}
@@ -119,8 +114,7 @@ const App = () => {
                         title={blogTitle}
                         author={blogAuthor}
                         url={blogUrl} />
-                    <button onClick={() => setCreateVisible(false)}>cancel</button>
-                </div>
+                </Togglable>
                 
                 
                 {blogs.map(blog =>
