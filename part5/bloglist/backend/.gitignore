@@ -1,0 +1,9 @@
+# node modules...
+/node_modules
+
+# Environmental variables
+/.env
+
+# Linter files
+eslintignore
+eslintrc.js

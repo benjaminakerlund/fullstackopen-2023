@@ -14,7 +14,7 @@ blogsRouter.get("/", async (request, response) => { // 4.8 changed from promises
 })
 
 // add a blog to DB
-blogsRouter.post("/", async (request, response) => {
+blogsRouter.post("/", async (request, response, next) => {
     const body = request.body
 
     // 4.18 addition, user token 
