@@ -33,14 +33,16 @@ const errorHandler = (error, request, response, next) => {
 } 
 
 // 4.20* put token request function into middle ware
-const tokenExtractor = (request, response, next) => { // 4.18
+const getTokenFrom = (request, response, next) => { // 4.18
     const authorization = request.get("authorization")
     if (authorization && authorization.startsWith("Bearer ")) {
         return authorization.replace("Bearer ", "")
     }
     return null
+}
 
-    next()
+const tokenExtractor = (request, response, next) => {
+    request.token = getTokenFrom(request)
 }
 
 

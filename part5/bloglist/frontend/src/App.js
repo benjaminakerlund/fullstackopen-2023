@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from "./services/login"
+import Notification from "./components/Notification"
 
 const App = () => {
     const [blogs, setBlogs] = useState([])
@@ -12,6 +13,7 @@ const App = () => {
     const [blogTitle, setBlogTitle] = useState("") //5.3
     const [blogAuthor, setBlogAuthor] = useState("") //5.3
     const [blogUrl, setBlogUrl] = useState("") //5.3
+    const [info, setInfo] = useState({ message: null })
 
 
     useEffect(() => {
@@ -31,6 +33,17 @@ const App = () => {
         }
     }, [])
 
+    /* Helper function for displaying notifications */
+    const notifyWith = (message, type="info") => {
+        setInfo({
+            message, type
+        })
+    
+        setTimeout(() => {
+            setInfo({ message: null })
+        }, 3000)
+    }
+
     // Own code
     const handleLogin = async (event) => { // 5.1
         event.preventDefault()
@@ -47,24 +60,21 @@ const App = () => {
             setUser(user)
             setUsername("")
             setPassword("")
+            notifyWith("Login succesful")
         } catch{
-            console.log("Wrong credentials")
-            /* Following code for error message not implemented yet.
-            setErrorMessage("Wrong credentials"
-            setTimeout(() => {
-                setErrorMessage(null)
-            }, 5000) */
+            notifyWith(`Wrong username or password`, "error")
         }
+            
     }
   
     const handleLogout = (event) => { // 5.2
-        console.log("pressed logout")
         window.localStorage.clear()
         setUser(null)
+        notifyWith("Logout succesful")
     }
 
     const handleCreate = (event) => { //5.3
-        console.log("inside handleCreate")
+        event.preventDefault()
         const blogObject = {
             user: user,
             title: blogTitle,
@@ -77,6 +87,7 @@ const App = () => {
             .then(blog => {
                 setBlogs(blogs.concat(blog))
             })
+        notifyWith(`Succesfully added a blog: '${blogObject.title}''`)
     }
 
     const loginForm = () => {
@@ -170,6 +181,8 @@ const App = () => {
     return (
         <div>
         <h1>blogs</h1>
+
+        <Notification info={info} />
             {user === null
             ? loginForm()
             : blogForm() 
