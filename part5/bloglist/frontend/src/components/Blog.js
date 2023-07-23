@@ -22,12 +22,12 @@ const Blog = ({blog}) => {
     return(
         <div style={blogStyle} >
             <div style={hideWhenVisible}>
-                {blog.title} {blog.author}
+                {blog.title} - {blog.author}
                 <button onClick={setVisibility}>view </button>
             </div>
 
             <div style={showWhenVisible}>
-                {blog.title} {blog.author} <br />
+                {blog.title} - {blog.author} <br />
                 {blog.url} <br />
                 {blog.likes} 
                 <button>like</button> <br />
