@@ -1,37 +1,35 @@
-const bcrypt = require("bcrypt")
-const usersRouter = require("express").Router()
-const User = require("../models/user")
+const bcrypt = require('bcrypt')
+const router = require('express').Router()
+const User = require('../models/user')
 
+router.post('/', async (request, response) => {
+  const { username, name, password } = request.body
 
-
-usersRouter.get("/", async (request, response) => {
-    const users = await User
-        .find({}).populate("blogs", { title: 1, author: 1, url: 1})
-
-    response.json(users)
-})
-
-usersRouter.post("/", async (request, response) => {
-    const { username, name, password} = request.body
-
-    if (password.length < 3) { // 4.16* Username length validated in Mongoose scheme.
-        response.status(400).send( { error: "Password too short. Minimum required length of password: 3."}) 
-    } 
-
-    const saltRounds = 10
-    const passwordHash = await bcrypt.hash(password, saltRounds)
-
-    const user = new User({
-        username, 
-        name,
-        passwordHash
+  if ( !password || password.length < 3) {
+    return response.status(400).json({
+      error: '`password` is shorter than the minimum allowed length (3)'
     })
+  }
 
-    const savedUser = await user.save()
+  const saltRounds = 10
+  const passwordHash = await bcrypt.hash(password, saltRounds)
 
-    response.status(201).json(savedUser)
-    
+  const user = new User({
+    username,
+    name,
+    passwordHash,
+  })
+
+  const savedUser = await user.save()
+
+  response.status(201).json(savedUser)
 })
 
+router.get('/', async (request, response) => {
+  const users = await User.find({})
+    .populate('blogs', { title: 1, author: 1, url: 1, likes: 1 })
 
-module.exports = usersRouter
+  response.json(users)
+})
+
+module.exports = router
