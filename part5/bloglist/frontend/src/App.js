@@ -32,7 +32,6 @@ const App = () => {
         if (loggedUserJSON) {
             const user = JSON.parse(loggedUserJSON)
             setUser(user)
-            // uncomment for 5.3 !!!
             blogService.setToken(user.token)
         }
     }, [])

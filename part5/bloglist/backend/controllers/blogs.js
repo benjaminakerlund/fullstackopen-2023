@@ -35,9 +35,15 @@ router.post('/', userExtractor, async (request, response) => {
 })
 
 router.put('/:id', async (request, response) => {
-  const { title, url, author, likes } = request.body
+    const { title, author, url, likes} = request.body // updated user to 5.9
+  const blog = {
+    title,
+    author,
+    url,
+    likes
+  }
 
-  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id,  { title, url, author, likes }, { new: true })
+  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id,  blog, { new: true })
 
   response.json(updatedBlog)
 })

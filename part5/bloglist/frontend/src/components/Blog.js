@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-
+import blogService from "../services/blogs"
 
 const Blog = ({blog}) => {
     const [visible, setVisible] = useState(false)
@@ -19,6 +19,20 @@ const Blog = ({blog}) => {
     const setVisibility = () => {
         setVisible(!visible)
     }
+
+    const handleLike = async event => {
+        const likes = blog.likes + 1
+        const updatedBlog = {...blog, likes}
+        try{
+            await blogService
+                .update(blog.id, updatedBlog)
+
+        } catch { 
+            console.log("something happened, inside handleLogin Catch")
+        }
+    }
+
+
     return(
         <div style={blogStyle} >
             <div style={hideWhenVisible}>
@@ -30,7 +44,7 @@ const Blog = ({blog}) => {
                 {blog.title} - {blog.author} <br />
                 {blog.url} <br />
                 {blog.likes} 
-                <button>like</button> <br />
+                <button onClick={handleLike}>like</button> <br />
                 {blog.user.username} <br />
 
                 <button onClick={setVisibility}>hide</button>
