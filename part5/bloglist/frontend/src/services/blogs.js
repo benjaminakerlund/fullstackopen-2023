@@ -2,10 +2,16 @@ import axios from 'axios'
 const baseUrl = '/api/blogs'
 
 let token = null
+let config = null 
 
 const setToken = newToken => {
     token = `Bearer ${newToken}`
+    config = { headers: { Authorization: token } }
+
 }
+
+// const config = { headers: { Authorization: token } }
+
 
 const getAll = () => {
   const request = axios.get(baseUrl)
@@ -27,6 +33,10 @@ const update = (id, newObject) => {
     return request.then(response => response.data)
 }
 
+const remove = (id, auth) => {
+    const request = axios.delete(`${baseUrl}/${id}`, auth)
+    return request.then(response => response.data)
+}
 
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getAll, create, update, setToken }
+export default { getAll, create, update, setToken, remove }

@@ -1,5 +1,7 @@
 const router = require('express').Router()
+const jwt = require("jsonwebtoken")
 const Blog = require('../models/blog')
+const user = require("../models/user")
 
 const { userExtractor } = require('../utils/middleware')
 
@@ -48,21 +50,14 @@ router.put('/:id', async (request, response) => {
   response.json(updatedBlog)
 })
 
-router.delete('/:id', userExtractor, async (request, response) => {
-  const blog = await Blog.findById(request.params.id)
+router.delete('/:id', async (request, response) => { // heavily modified...
+  try {
+    const blog = await Blog.findById(request.params.id)
+    await blog.deleteOne() //for some reason remove() is deprecated in mongoose newer versions
+    
+    response.status(204).end()
+  } catch(error) {console.log(error)}
 
-  const user = request.user
-
-  if (!user || blog.user.toString() !== user.id.toString()) {
-    return response.status(401).json({ error: 'operation not permitted' })
-  }
-
-  user.blogs = user.blogs.filter(b => b.toString() !== blog.id.toString() )
-
-  await user.save()
-  await blog.remove()
-  
-  response.status(204).end()
 })
 
 module.exports = router

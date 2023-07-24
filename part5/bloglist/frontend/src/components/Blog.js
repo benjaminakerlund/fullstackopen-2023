@@ -9,7 +9,7 @@ const blogStyle = {
     marginBottom: 5
     }
 
-const Blog = ({blog}) => {
+const Blog = ({ blog, user}) => {
     const [visible, setVisible] = useState(false)
 
     const hideWhenVisible = { display: visible ? 'none' : '' }
@@ -32,6 +32,26 @@ const Blog = ({blog}) => {
         }
     }
 
+    const blogDelete = () => { // only show remove button if user has added the blog
+        if (user.username === blog.user.username) {
+            return (
+                <button onClick={handleDelete}>remove</button>
+            )
+        }
+    }
+
+    const handleDelete = async event => {
+        event.preventDefault()
+        if(window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+            
+            blogService
+                .setToken(user.token)
+            
+            await blogService   
+                .remove(blog.id, user)
+        }
+    }
+
 
     return(
         <div style={blogStyle} >
@@ -41,13 +61,14 @@ const Blog = ({blog}) => {
             </div>
 
             <div style={showWhenVisible}>
-                {blog.title} - {blog.author} <br />
+                {blog.title} - {blog.author} 
+                <button onClick={setVisibility}>hide</button>
+                <br />
                 {blog.url} <br />
                 {blog.likes} 
                 <button onClick={handleLike}>like</button> <br />
                 {blog.user.username} <br />
-
-                <button onClick={setVisibility}>hide</button>
+                {blogDelete()}
 
             </div>
             
