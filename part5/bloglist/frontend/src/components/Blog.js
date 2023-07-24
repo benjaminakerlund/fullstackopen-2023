@@ -21,6 +21,7 @@ const Blog = ({ blog, user }) => {
     }
 
     const handleLike = async () => {
+        console.log("Pressed like!")
         const likes = blog.likes + 1
         const updatedBlog = { ...blog, likes }
         try{
@@ -54,13 +55,13 @@ const Blog = ({ blog, user }) => {
 
 
     return(
-        <div style={blogStyle} >
+        <div style={blogStyle} className="blog">
             <div style={hideWhenVisible}>
                 {blog.title} - {blog.author}
                 <button onClick={setVisibility}>view </button>
             </div>
 
-            <div style={showWhenVisible}>
+            <div style={showWhenVisible} className="hidden">
                 {blog.title} - {blog.author}
                 <button onClick={setVisibility}>hide</button>
                 <br />
