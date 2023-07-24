@@ -7,28 +7,28 @@ const blogStyle = {
     border: "solid",
     borderWidth: 1,
     marginBottom: 5
-    }
+}
 
-const Blog = ({ blog, user}) => {
+const Blog = ({ blog, user }) => {
     const [visible, setVisible] = useState(false)
 
-    const hideWhenVisible = { display: visible ? 'none' : '' }
-    const showWhenVisible = { display: visible ? '' : 'none' }
+    const hideWhenVisible = { display: visible ? "none" : "" }
+    const showWhenVisible = { display: visible ? "" : "none" }
 
 
     const setVisibility = () => {
         setVisible(!visible)
     }
 
-    const handleLike = async event => {
+    const handleLike = async () => {
         const likes = blog.likes + 1
-        const updatedBlog = {...blog, likes}
+        const updatedBlog = { ...blog, likes }
         try{
             await blogService
                 .update(blog.id, updatedBlog)
 
-        } catch { 
-            console.log("something happened, inside handleLogin Catch")
+        } catch (error) {
+            console.log(error)
         }
     }
 
@@ -43,11 +43,11 @@ const Blog = ({ blog, user}) => {
     const handleDelete = async event => {
         event.preventDefault()
         if(window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
-            
+
             blogService
                 .setToken(user.token)
-            
-            await blogService   
+
+            await blogService
                 .remove(blog.id, user)
         }
     }
@@ -61,17 +61,17 @@ const Blog = ({ blog, user}) => {
             </div>
 
             <div style={showWhenVisible}>
-                {blog.title} - {blog.author} 
+                {blog.title} - {blog.author}
                 <button onClick={setVisibility}>hide</button>
                 <br />
                 {blog.url} <br />
-                {blog.likes} 
+                {blog.likes}
                 <button onClick={handleLike}>like</button> <br />
                 {blog.user.username} <br />
                 {blogDelete()}
 
             </div>
-            
+
         </div>
     )
 }

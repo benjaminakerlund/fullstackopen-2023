@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
-import Blog from './components/Blog'
-import blogService from './services/blogs'
+import { useState, useEffect } from "react"
+import Blog from "./components/Blog"
+import blogService from "./services/blogs"
 import loginService from "./services/login"
 import Notification from "./components/Notification"
 import LoginForm from "./components/LoginForm"
@@ -9,21 +9,16 @@ import Togglable from "./components/Togglable"
 
 const App = () => {
     const [blogs, setBlogs] = useState([])
-    //Added code:
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [user, setUser] = useState(null)
-    const [blogTitle, setBlogTitle] = useState("") //5.3
-    const [blogAuthor, setBlogAuthor] = useState("") //5.3
-    const [blogUrl, setBlogUrl] = useState("") //5.3
     const [info, setInfo] = useState({ message: null })
-    const [createVisible, setCreateVisible] = useState(false) // 5.5
 
 
     useEffect(() => {
         blogService.getAll().then(blogs =>
-        setBlogs( blogs )
-        )  
+            setBlogs( blogs )
+        )
     }, [])
 
     //own effect
@@ -41,7 +36,7 @@ const App = () => {
         setInfo({
             message, type
         })
-    
+
         setTimeout(() => {
             setInfo({ message: null })
         }, 3000)
@@ -64,13 +59,14 @@ const App = () => {
             setUsername("")
             setPassword("")
             notifyWith("Login succesful")
-        } catch{
-            notifyWith(`Wrong username or password`, "error")
+        } catch (error) {
+            console.log(error)
+            notifyWith("Wrong username or password", "error")
         }
-            
+
     }
-  
-    const handleLogout = (event) => { // 5.2
+
+    const handleLogout = () => { // 5.2
         window.localStorage.clear()
         setUser(null)
         notifyWith("Logout succesful")
@@ -90,8 +86,7 @@ const App = () => {
             .then(blog => {
                 setBlogs(blogs.concat(blog))
             })
-        notifyWith(`Succesfully added a blog: '${blogObject.title}''`)
-        setCreateVisible(false)
+        notifyWith(`Succesfully added a blog: "${blogObject.title}"`)
     }
 
 
@@ -100,26 +95,26 @@ const App = () => {
         return (
             <div>
                 <div>{user.name} is logged in
-                <button onClick={handleLogout}>logout</button> </div>
+                    <button onClick={handleLogout}>logout</button> </div>
                 <br></br>
 
                 <Togglable buttonLabel="new blog">
-                    <NewBlogForm createBlog={handleCreate} />                    
+                    <NewBlogForm createBlog={handleCreate} />
                 </Togglable>
-                
+
 
                 {blogs
                     .sort((a, b) => b.likes - a.likes)
                     .map(blog =>
-                        <Blog 
-                            key={blog.id} 
+                        <Blog
+                            key={blog.id}
                             blog={blog}
                             user={user}
                         />
                     )}
 
-            </div> 
-            
+            </div>
+
         )
     }
 
@@ -129,19 +124,19 @@ const App = () => {
             <h1>blogs</h1>
             <Notification info={info} />
             <div>
-            {user === null
-                ? <LoginForm
-                    username={username}
-                    password={password}
-                    handleUsernameChange={({ target }) => setUsername(target.value)}
-                    handlePasswordChange={({ target }) => setPassword(target.value)}
-                    handleSubmit={handleLogin} /> 
-                :showBlogs()
+                {user === null
+                    ? <LoginForm
+                        username={username}
+                        password={password}
+                        handleUsernameChange={({ target }) => setUsername(target.value)}
+                        handlePasswordChange={({ target }) => setPassword(target.value)}
+                        handleSubmit={handleLogin} />
+                    :showBlogs()
                 }
 
             </div>
         </div>
-            
+
     )
 }
 
